@@ -254,31 +254,62 @@ function AuthModal({ mode, setMode, form, handleChange, onClose, onLogin, onRegi
 function AdminLoginModal({ form, handleChange, onLogin, onClose, navigate }) {
   return (
     <div className="fixed inset-0 bg-black/40 flex justify-center items-center z-50">
-      <div className="bg-white p-6 rounded-xl w-96 shadow-xl text-center space-y-4">
+      <div className="bg-white rounded-xl w-[800px] max-w-[90vw] h-[600px] shadow-xl flex overflow-hidden">
 
-        <h2 className="text-xl font-semibold">Admin Login</h2>
+        {/* LEFT IMAGE */}
+        <div className="w-1/2 hidden md:block">
+          <img
+            src="https://images.unsplash.com/photo-1483691278019-cb7253bee49f"
+            className="w-full h-full object-cover"
+          />
+        </div>
 
-        <input name="email" placeholder="Email" className="input" onChange={handleChange} />
-        <input name="password" type="password" placeholder="Password" className="input" onChange={handleChange} />
+        {/* RIGHT CONTENT */}
+        <div className="w-full md:w-1/2 p-8 flex flex-col justify-center">
 
-        <button
-          onClick={async () => {
-            try {
-              await onLogin({ email: form.email, password: form.password });
-              navigate("/admin");   // <-- ADMIN DASH NAVIGATE
-              onClose();            // <-- CLOSE MODAL
-            } catch {
-              alert("Admin Login Failed");
-            }
-          }}
-          className="btn-primary bg-purple-600"
-        >
-          Login
-        </button>
+          <h2 className="text-3xl font-bold mb-6 text-center">Admin Login</h2>
 
-        <button onClick={onClose} className="text-sm text-gray-600">Close</button>
+          <div className="flex flex-col gap-4">
+            <input
+              name="email"
+              placeholder="Email"
+              className="input px-4 py-3 border rounded-lg w-full"
+              onChange={handleChange}
+            />
+            <input
+              name="password"
+              type="password"
+              placeholder="Password"
+              className="input px-4 py-3 border rounded-lg w-full"
+              onChange={handleChange}
+            />
+
+            <button
+              onClick={async () => {
+                try {
+                  await onLogin({ email: form.email, password: form.password });
+                  navigate("/admin");   // admin dashboard
+                  onClose();
+                } catch {
+                  alert("Admin Login Failed");
+                }
+              }}
+              className="btn-primary bg-purple-600 py-3 rounded-lg text-white font-semibold"
+            >
+              Login
+            </button>
+          </div>
+
+          <button
+            onClick={onClose}
+            className="mt-6 text-sm text-gray-600 self-center"
+          >
+            Close
+          </button>
+        </div>
       </div>
     </div>
   );
 }
+
 
