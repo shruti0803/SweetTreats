@@ -1,58 +1,70 @@
-import { createContext, useState, useEffect } from "react";
+import { createContext, useState, useContext } from "react";
 import axios from "axios";
 
 export const AuthContext = createContext();
 
-export default function AuthProvider({ children }) {
-  const [user, setUser] = useState(null);  
-  const [token, setToken] = useState(localStorage.getItem("token") || null);
+export const AuthProvider = ({ children }) => {
+  const [user, setUser] = useState(null);
+  const [admin, setAdmin] = useState(null);
+  const [token, setToken] = useState(null);
 
-  // Store token on change
-  useEffect(() => {
-    if (token) localStorage.setItem("token", token);
-    else localStorage.removeItem("token");
-  }, [token]);
+  // ---------------- USER REGISTER ----------------
+  const registerUser = async ({ name, email, password }) => {
+    const { data } = await axios.post(
+      "http://localhost:5000/api/user/register",
+      { name, email, password }
+    );
 
-  // -----------------------------
-  // USER REGISTER
-  // -----------------------------
-  const registerUser = async (data) => {
-    const res = await axios.post("http://localhost:5000/api/user/register", data);
-    setUser(res.data.user);
-    setToken(res.data.token);
-    return res.data;
+    setUser(data.user);
+    setToken(data.token);
   };
 
-  // -----------------------------
-  // USER LOGIN
-  // -----------------------------
-  const loginUser = async (data) => {
-    const res = await axios.post("http://localhost:5000/api/user/login", data);
-    setUser(res.data.user);
-    setToken(res.data.token);
-    return res.data;
+  // ---------------- USER LOGIN ----------------
+  const loginUser = async ({ email, password }) => {
+    const { data } = await axios.post(
+      "http://localhost:5000/api/user/login",
+      { email, password }
+    );
+
+    setUser(data.user);
+    setToken(data.token);
   };
 
-  // -----------------------------
-  // ADMIN LOGIN
-  // -----------------------------
-  const loginAdmin = async (data) => {
-    const res = await axios.post("http://localhost:5000/api/admin/login", data);
-    setUser({ ...res.data.admin, role: "admin" });
-    setToken(res.data.token);
-    return res.data;
+  // ---------------- ADMIN LOGIN ----------------
+  const loginAdmin = async ({ email, password }) => {
+    const { data } = await axios.post(
+      "http://localhost:5000/api/admin/login",
+      { email, password }
+    );
+
+    setAdmin(data.admin);
+    setToken(data.token);
+    
   };
 
-  const logout = () => {
-    setUser(null);
-    setToken(null);
-  };
+  // ---------------- LOGOUT ----------------
+// AuthContext.js (add logout)
+const logout = async () => {
+  await axios.post("http://localhost:5000/api/user/logout", {}, { withCredentials: true });
+  setUser(null); // or setAdmin(null)
+};
+
 
   return (
     <AuthContext.Provider
-      value={{ user, token, registerUser, loginUser, loginAdmin, logout }}
+      value={{
+        user,
+        admin,
+        token,
+        registerUser,
+        loginUser,
+        loginAdmin,
+        logout,
+      }}
     >
       {children}
     </AuthContext.Provider>
   );
-}
+};
+
+export const useAuth = () => useContext(AuthContext);
