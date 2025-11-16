@@ -100,6 +100,10 @@ export const purchaseSweet = async (req: Request, res: Response) => {
     const { id } = req.params;
     const { quantity } = req.body;
 
+    if (!quantity || quantity <= 0) {
+      return res.status(400).json({ message: "Quantity must be provided and greater than 0" });
+    }
+
     const sweet = await Sweet.findById(id);
     if (!sweet) return res.status(404).json({ message: "Sweet not found" });
 
@@ -111,7 +115,15 @@ export const purchaseSweet = async (req: Request, res: Response) => {
     await sweet.save();
 
     res.json({ message: "Purchase successful", sweet });
-  } catch {
-    res.status(500).json({ message: "Error purchasing sweet" });
+  } catch (err: unknown) {
+    console.error("Error purchasing sweet:", err);
+    // Type guard for unknown
+    if (err instanceof Error) {
+      res.status(500).json({ message: "Error purchasing sweet", error: err.message });
+    } else {
+      res.status(500).json({ message: "Error purchasing sweet", error: String(err) });
+    }
   }
 };
+
+

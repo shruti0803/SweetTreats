@@ -1,9 +1,13 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import { ShoppingCart, Heart, Minus, Plus } from "lucide-react";
+import { ShoppingCart, Heart, Minus, Plus, X } from "lucide-react";
+import { useContext } from "react";
+import { AuthContext } from "../context/AuthContext";
 
-// Product Card Component
-const ProductCard = ({ product }) => {
+
+  
+
+const ProductCard = ({ product, onBuy }) => {
   const [quantity, setQuantity] = useState(1);
   const [isFavorite, setIsFavorite] = useState(false);
 
@@ -41,102 +45,115 @@ const ProductCard = ({ product }) => {
           <button className="flex-grow flex items-center justify-center px-4 py-2 bg-red-600 hover:bg-red-700 text-white font-semibold rounded-lg shadow-md transition-colors duration-200 text-sm">
             <ShoppingCart className="w-4 h-4 mr-1" /> Add to Cart
           </button>
+          <button
+  onClick={() => onBuy({ ...product, selectedQuantity: quantity })}
+  className="px-3 py-2 bg-green-600 text-white rounded hover:bg-green-700 text-sm"
+>
+  Buy Now
+</button>
+
         </div>
       </div>
     </div>
   );
 };
 
-// Main Shop Component
 const Shop = () => {
   const [products, setProducts] = useState([]);
   const [activeCategory, setActiveCategory] = useState("Sweets");
-  const [searchQuery, setSearchQuery] = useState("");
-  const [minPrice, setMinPrice] = useState("");
-  const [maxPrice, setMaxPrice] = useState("");
-
+  const [modalProduct, setModalProduct] = useState(null);
+  const [purchaseLoading, setPurchaseLoading] = useState(false);
+const { user, token } = useContext(AuthContext); // <- Add this
   const CATEGORIES = ["Sweets", "Savouries", "Bakes", "Podi & Thokku", "Gifts"];
 
-  // Fetch all sweets
   const fetchProducts = async () => {
     try {
       const res = await axios.get("http://localhost:5000/api/sweets/getAllsweets");
-      setProducts(res.data);
+      setProducts(res.data.sweets || res.data);
     } catch (err) {
       console.error("Failed to load products:", err);
     }
   };
 
-  // Search with filters
-  const handleSearch = async () => {
-    try {
-      const params = {};
-      if (searchQuery) params.name = searchQuery;
-      if (activeCategory) params.category = activeCategory;
-      if (minPrice) params.minPrice = minPrice;
-      if (maxPrice) params.maxPrice = maxPrice;
+  useEffect(() => { fetchProducts(); }, []);
 
-      const res = await axios.get("http://localhost:5000/api/sweets/search", { params });
-      setProducts(res.data);
-    } catch (err) {
-      console.error("Search failed:", err);
-    }
-  };
+const handlePurchase = async (product, quantity) => {
+  if (!user || !token) {
+    return alert("You must log in as a user to make a purchase!");
+  }
 
-  useEffect(() => {
-    fetchProducts();
-  }, []);
+  setPurchaseLoading(true);
+  try {
+    await axios.post(
+      `http://localhost:5000/api/sweets/${product._id}/purchase`,
+      { quantity }, // <-- send quantity!
+      { headers: { Authorization: `Bearer ${token}` } }
+    );
+    alert("Purchase successful!");
+    setModalProduct(null);
+  } catch (err) {
+    console.error("Purchase failed:", err.response?.data || err);
+    alert("Purchase failed. Try again!");
+  }
+  setPurchaseLoading(false);
+};
 
-  // Filter by category locally
+
+
   const filteredProducts = products.filter(p => !activeCategory || p.category === activeCategory);
 
   return (
     <div className="min-h-screen bg-gray-50 font-sans p-4 sm:p-8 md:p-12">
-      <header className="mb-10 flex flex-wrap justify-between items-center mb-6 space-y-2 sm:space-y-0 ">
-       <div> <h1 className="text-4xl font-extrabold text-gray-900 mb-2">Categories Products</h1>
-        <p className="text-xl text-gray-600">Explore the delicious range</p>
-        </div>
-         <div className="flex gap-2">
-          <input type="text" placeholder="Search name" value={searchQuery} onChange={e => setSearchQuery(e.target.value)} className="input" />
-          <input type="number" placeholder="Min Price" value={minPrice} onChange={e => setMinPrice(e.target.value)} className="input w-24" />
-          <input type="number" placeholder="Max Price" value={maxPrice} onChange={e => setMaxPrice(e.target.value)} className="input w-24" />
-          <button onClick={handleSearch} className="px-4 py-2 bg-red-600 text-white rounded">Search</button>
-        </div>
-      </header>
-
-      {/* Filters */}
-      <div className="flex flex-wrap justify-center items-center mb-6 space-y-2 sm:space-y-0">
-        <div className="flex flex-wrap gap-2">
-          {CATEGORIES.map(cat => (
-            <button
-              key={cat}
-              onClick={() => setActiveCategory(cat)}
-              className={`px-4 py-2 text-sm font-semibold rounded-full transition-all duration-300 ${
-                activeCategory === cat
-                  ? "bg-red-600 text-white shadow-md"
-                  : "bg-white text-gray-600 hover:bg-gray-100"
-              }`}
-            >
-              {cat}
-            </button>
-          ))}
-        </div>
-
-       
+      {/* Category Tabs */}
+      <div className="flex flex-wrap gap-2 mb-6">
+        {CATEGORIES.map(cat => (
+          <button
+            key={cat}
+            onClick={() => setActiveCategory(cat)}
+            className={`px-4 py-2 rounded-full font-semibold text-sm transition-all duration-300 ${
+              activeCategory === cat ? "bg-red-600 text-white" : "bg-white text-gray-600 hover:bg-gray-100"
+            }`}
+          >
+            {cat}
+          </button>
+        ))}
       </div>
 
       {/* Product Grid */}
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6">
-        {filteredProducts.length > 0 ? (
-          filteredProducts.map(p => <ProductCard key={p._id} product={p} />)
-        ) : (
-          <div className="col-span-full p-12 text-center bg-white rounded-xl shadow-lg">
-            <p className="text-xl font-medium text-gray-500">
-              No products found in the <span className="font-bold text-red-600">{activeCategory}</span> category.
-            </p>
-          </div>
-        )}
+        {filteredProducts.map(p => (
+          <ProductCard key={p._id} product={p} onBuy={setModalProduct} />
+        ))}
       </div>
+
+      {/* Buy Now Modal */}
+      {modalProduct && (
+        <div className="fixed inset-0 bg-black/50 flex justify-center items-center z-50">
+          <div className="bg-white rounded-lg p-6 w-96 relative">
+            <button
+              className="absolute top-3 right-3 text-gray-600 hover:text-gray-800"
+              onClick={() => setModalProduct(null)}
+            ><X /></button>
+            <img
+              src={modalProduct.image || `https://placehold.co/300x300/ffedc4/d97706?text=${modalProduct.name.replace(/ /g, '+')}`}
+              alt={modalProduct.name}
+              className="w-full h-48 object-contain mb-4 rounded"
+            />
+            <h2 className="text-xl font-bold mb-2">{modalProduct.name}</h2>
+            <p className="text-gray-500 mb-2">{modalProduct.description || "No description available."}</p>
+            <p className="text-red-600 font-bold text-lg mb-2">₹{modalProduct.price}</p>
+            <p className="text-gray-600 mb-4">{modalProduct.quantity} in stock</p>
+         <button
+  onClick={() => handlePurchase(modalProduct, modalProduct.selectedQuantity || 1)}
+  disabled={purchaseLoading}
+  className={`w-full py-2 rounded text-white font-semibold ${purchaseLoading ? "bg-gray-400" : "bg-green-600 hover:bg-green-700"}`}
+>
+  {purchaseLoading ? "Processing..." : "Buy Now"}
+</button>
+
+          </div>
+        </div>
+      )}
     </div>
   );
 };

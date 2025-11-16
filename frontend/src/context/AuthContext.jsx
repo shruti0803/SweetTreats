@@ -54,8 +54,15 @@ export const AuthProvider = ({ children }) => {
 // AuthContext.js (add logout)
 const logout = async () => {
   await axios.post("http://localhost:5000/api/user/logout", {}, { withCredentials: true });
-  setUser(null); // or setAdmin(null)
+  setUser(null);
+  setAdmin(null);
+  setToken(null);
+  localStorage.removeItem("userToken");
+  localStorage.removeItem("userInfo");
+  localStorage.removeItem("adminToken");
+  localStorage.removeItem("adminInfo");
 };
+
 
 
   return (

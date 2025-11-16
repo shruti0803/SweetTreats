@@ -133,9 +133,7 @@ const navigate = useNavigate();
   );
 }
 
-/* ------------------------------------------------------- */
-/* USER AUTH MODAL COMPONENT                               */
-/* ------------------------------------------------------- */
+
 
 function AuthModal({ mode, setMode, form, handleChange, onClose, onLogin, onRegister }) {
   return (
