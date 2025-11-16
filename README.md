@@ -104,7 +104,7 @@ The frontend will run on `http://localhost:5173`.
 ![alt text](image-2.png)
 ### Admin Dashboard
 
-![Admin Dashboard](screenshots/admin-dashboard.png)
+![alt text](image-3.png)
 
 ### Product Detail / Cart
 
