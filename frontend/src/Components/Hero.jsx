@@ -10,7 +10,7 @@ const slides = [
     buttonText: "Shop Sweets",
     bgImageUrl: "https://tse3.mm.bing.net/th/id/OIP.mZc62RWBg-r7nJuoYpgxmgHaDe?pid=Api&P=0&h=180",
     productImageUrl: "https://cdn.pixabay.com/photo/2025/04/17/06/00/how-to-create-new-colour-9539269_1280.jpg",
-    productAlt: "Almond Truffles",
+    productAlt: "Gulab Jamun",
     productTextColor: 'text-amber-500',
   },
   {
@@ -19,7 +19,7 @@ const slides = [
     buttonText: "Explore Savories",
     bgImageUrl: "https://tse1.mm.bing.net/th/id/OIP.0GMSA2X4GUtWkAZSrlWHKgHaEK?pid=Api&P=0&h=180",
     productImageUrl: "https://cdn.pixabay.com/photo/2024/03/17/01/56/ai-generated-8638164_1280.png",
-    productAlt: "Murukku and Mixture",
+    productAlt: "Siwaye",
     productTextColor: 'text-emerald-500',
   },
   {
@@ -28,7 +28,7 @@ const slides = [
     buttonText: "Discover Podis",
     bgImageUrl: "https://tse4.mm.bing.net/th/id/OIP.RJAqe-XfdDTdh_1BR2JDGQHaEo?pid=Api&P=0&h=180",
     productImageUrl: "https://img.freepik.com/premium-photo/indulgent-chocolate-cake-presentation-tempting-treat-plate_1000124-6715.jpg",
-    productAlt: "Idli Podi Jar",
+    productAlt: "Cake",
     productTextColor: 'text-gray-400',
   },
 ];

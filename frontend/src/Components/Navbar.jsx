@@ -32,7 +32,7 @@ const navigate = useNavigate();
       {/* NAVBAR */}
       <nav className="bg-white shadow-md fixed w-full z-50">
         <div className="max-w-7xl mx-auto px-2 py-4 flex justify-between items-center">
-          <div className="text-2xl font-bold text-pink-600">SweetTreats</div>
+          <div className="text-2xl font-bold text-red-600">SweetTreats</div>
 
           <div className="hidden md:flex space-x-6 items-center">
             <Link to="/" className="flex items-center space-x-1 hover:text-pink-500">
@@ -40,7 +40,7 @@ const navigate = useNavigate();
               <span>Home</span>
             </Link>
 
-            <Link to="/shop" className="flex items-center space-x-1 hover:text-pink-500">
+            <Link to="/shop" className="flex items-center space-x-1 hover:text-red-500">
               <ShoppingCartIcon className="w-6 h-6" />
               <span>Shop</span>
             </Link>
@@ -49,7 +49,7 @@ const navigate = useNavigate();
             <div className="relative">
               <button
                 onClick={() => setShowDropdown(!showDropdown)}
-                className="flex items-center space-x-1 hover:text-pink-500"
+                className="flex items-center space-x-1 hover:text-red-500"
               >
                 <UserIcon className="w-6 h-6" />
                 <span>{user ? user.name : admin ? "Admin" : "Login"}</span>
@@ -138,10 +138,10 @@ const navigate = useNavigate();
 function AuthModal({ mode, setMode, form, handleChange, onClose, onLogin, onRegister }) {
   return (
     <div className="fixed inset-0 bg-black/40 flex justify-center items-center z-50">
-      <div className="bg-white rounded-xl w-[700px] shadow-xl flex">
+      <div className="bg-white rounded-xl w-[800px] max-w-[90vw] h-[600px] shadow-xl flex overflow-hidden">
 
         {/* LEFT IMAGE */}
-        <div className="w-1/2">
+        <div className="w-1/2 hidden md:block">
           <img
             src="https://images.unsplash.com/photo-1483691278019-cb7253bee49f"
             className="w-full h-full object-cover"
@@ -149,19 +149,19 @@ function AuthModal({ mode, setMode, form, handleChange, onClose, onLogin, onRegi
         </div>
 
         {/* RIGHT CONTENT */}
-        <div className="w-1/2 p-6">
+        <div className="w-full md:w-1/2 p-8 flex flex-col justify-center">
 
           {/* SWITCH LOGIN / REGISTER */}
-          <div className="flex justify-around mb-5">
+          <div className="flex justify-around mb-6">
             <button
               onClick={() => setMode("login")}
-              className={mode === "login" ? "text-pink-600 font-bold" : "text-gray-400"}
+              className={mode === "login" ? "text-red-600 font-bold text-lg" : "text-gray-400 text-lg"}
             >
               Login
             </button>
             <button
               onClick={() => setMode("register")}
-              className={mode === "register" ? "text-pink-600 font-bold" : "text-gray-400"}
+              className={mode === "register" ? "text-red-600 font-bold text-lg" : "text-gray-400 text-lg"}
             >
               Register
             </button>
@@ -169,58 +169,83 @@ function AuthModal({ mode, setMode, form, handleChange, onClose, onLogin, onRegi
 
           {/* LOGIN FORM */}
           {mode === "login" && (
-            <>
-              <input name="email" placeholder="Email" className="input" onChange={handleChange} />
-              <input name="password" type="password" placeholder="Password" className="input" onChange={handleChange} />
-
+            <div className="flex flex-col gap-4">
+              <input
+                name="email"
+                placeholder="Email"
+                className="input px-4 py-3 border rounded-lg w-full"
+                onChange={handleChange}
+              />
+              <input
+                name="password"
+                type="password"
+                placeholder="Password"
+                className="input px-4 py-3 border rounded-lg w-full"
+                onChange={handleChange}
+              />
               <button
                 onClick={async () => {
-  try {
-    await onLogin({ email: form.email, password: form.password });
-    navigate("/");
-    onClose();
-  } catch {
-    alert("Login Failed");
-  }
-}}
-
-                className="btn-primary bg-green-500"
+                  await onLogin({ email: form.email, password: form.password });
+                  navigate("/");
+                  onClose();
+                }}
+                className="btn-primary bg-green-500 py-3 rounded-lg text-white font-semibold"
               >
                 Login
               </button>
-            </>
+            </div>
           )}
 
           {/* REGISTER FORM */}
           {mode === "register" && (
-            <>
-              <input name="name" placeholder="Name" className="input" onChange={handleChange} />
-              <input name="email" placeholder="Email" className="input" onChange={handleChange} />
-              <input name="password" type="password" placeholder="Password" className="input" onChange={handleChange} />
-              <input name="confirmPassword" type="password" placeholder="Confirm Password" className="input" onChange={handleChange} />
-
+            <div className="flex flex-col gap-4">
+              <input
+                name="name"
+                placeholder="Name"
+                className="input px-4 py-3 border rounded-lg w-full"
+                onChange={handleChange}
+              />
+              <input
+                name="email"
+                placeholder="Email"
+                className="input px-4 py-3 border rounded-lg w-full"
+                onChange={handleChange}
+              />
+              <input
+                name="password"
+                type="password"
+                placeholder="Password"
+                className="input px-4 py-3 border rounded-lg w-full"
+                onChange={handleChange}
+              />
+              <input
+                name="confirmPassword"
+                type="password"
+                placeholder="Confirm Password"
+                className="input px-4 py-3 border rounded-lg w-full"
+                onChange={handleChange}
+              />
               <button
-              onClick={async () => {
-  if (form.password !== form.confirmPassword) return alert("Passwords mismatch");
-
-  await onRegister(form);
-  navigate("/");
-  onClose();
-}}
-
-                className="btn-primary bg-blue-500"
+                onClick={async () => {
+                  if (form.password !== form.confirmPassword) return alert("Passwords mismatch");
+                  await onRegister(form);
+                  navigate("/");
+                  onClose();
+                }}
+                className="btn-primary bg-blue-500 py-3 rounded-lg text-white font-semibold"
               >
                 Register
               </button>
-            </>
+            </div>
           )}
 
-          <button onClick={onClose} className="mt-4 text-sm text-gray-600">Close</button>
+          <button onClick={onClose} className="mt-6 text-sm text-gray-600 self-center">Close</button>
         </div>
       </div>
     </div>
   );
 }
+
 
 /* ------------------------------------------------------- */
 /* ADMIN LOGIN MODAL                                       */
