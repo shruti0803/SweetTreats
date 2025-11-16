@@ -100,7 +100,8 @@ The frontend will run on `http://localhost:5173`.
 
 ![Home Page](screenshots/home.png)
 ![Home Page 2](screenshots/home2.png)
-
+![alt text](image-1.png)
+![alt text](image-2.png)
 ### Admin Dashboard
 
 ![Admin Dashboard](screenshots/admin-dashboard.png)
