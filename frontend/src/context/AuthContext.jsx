@@ -32,15 +32,19 @@ export const AuthProvider = ({ children }) => {
 
   // ---------------- ADMIN LOGIN ----------------
   const loginAdmin = async ({ email, password }) => {
-    const { data } = await axios.post(
-      "http://localhost:5000/api/admin/login",
-      { email, password }
-    );
+  const { data } = await axios.post(
+    "http://localhost:5000/api/admin/login",
+    { email, password }
+  );
 
-    setAdmin(data.admin);
-    setToken(data.token);
-    
-  };
+  setAdmin(data.admin);
+  setToken(data.token);
+
+  // ✅ Store token and admin info in localStorage automatically
+  localStorage.setItem("adminToken", data.token);
+  localStorage.setItem("adminInfo", JSON.stringify(data.admin));
+};
+
 
   // ---------------- LOGOUT ----------------
 // AuthContext.js (add logout)

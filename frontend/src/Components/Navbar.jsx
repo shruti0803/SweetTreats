@@ -112,20 +112,23 @@ const navigate = useNavigate();
           onClose={closeAll}
           onLogin={loginUser}
           onRegister={registerUser}
+           navigate={navigate} 
         />
       )}
 
       {/* -------------------------------- */}
       {/* ADMIN LOGIN MODAL */}
       {/* -------------------------------- */}
-      {adminModal && (
-        <AdminLoginModal
-          form={form}
-          handleChange={handleChange}
-          onLogin={loginAdmin}
-          onClose={closeAll}
-        />
-      )}
+     {adminModal && (
+  <AdminLoginModal
+    form={form}
+    handleChange={handleChange}
+    onLogin={loginAdmin}
+    onClose={closeAll}
+    navigate={navigate}   // <-- ADD THIS
+  />
+)}
+
     </>
   );
 }
@@ -225,7 +228,7 @@ function AuthModal({ mode, setMode, form, handleChange, onClose, onLogin, onRegi
 /* ADMIN LOGIN MODAL                                       */
 /* ------------------------------------------------------- */
 
-function AdminLoginModal({ form, handleChange, onLogin, onClose }) {
+function AdminLoginModal({ form, handleChange, onLogin, onClose, navigate }) {
   return (
     <div className="fixed inset-0 bg-black/40 flex justify-center items-center z-50">
       <div className="bg-white p-6 rounded-xl w-96 shadow-xl text-center space-y-4">
@@ -236,7 +239,15 @@ function AdminLoginModal({ form, handleChange, onLogin, onClose }) {
         <input name="password" type="password" placeholder="Password" className="input" onChange={handleChange} />
 
         <button
-          onClick={() => onLogin({ email: form.email, password: form.password })}
+          onClick={async () => {
+            try {
+              await onLogin({ email: form.email, password: form.password });
+              navigate("/admin");   // <-- ADMIN DASH NAVIGATE
+              onClose();            // <-- CLOSE MODAL
+            } catch {
+              alert("Admin Login Failed");
+            }
+          }}
           className="btn-primary bg-purple-600"
         >
           Login
@@ -247,3 +258,4 @@ function AdminLoginModal({ form, handleChange, onLogin, onClose }) {
     </div>
   );
 }
+

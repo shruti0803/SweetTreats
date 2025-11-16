@@ -1,19 +1,19 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
-import HomePage from './Pages/HomePage'
+import { Routes, Route } from "react-router-dom";
+import HomePage from "./Pages/HomePage";
+import AdminPage from "./Pages/AdminPage";   // ⬅️ your admin dashboard
 
-function App() {
-  const [count, setCount] = useState(0)
-
+export default function App() {
   return (
     <>
-      
-     
-     <HomePage/>
-    </>
-  )
-}
+      <Routes>
+        {/* Home */}
+        <Route path="/" element={<HomePage />} />
 
-export default App
+        {/* Admin Dashboard */}
+        <Route path="/admin" element={<AdminPage />} />
+
+        {/* You can add more routes later */}
+      </Routes>
+    </>
+  );
+}
