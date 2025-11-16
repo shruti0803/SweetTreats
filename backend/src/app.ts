@@ -18,8 +18,7 @@ app.use(cookieParser());
 
 // ⭐ FIX: ALLOW FRONTEND ORIGIN
 app.use(cors({
-  origin: "https://cheerful-arithmetic-9ef9e3.netlify.app", // frontend URL
-  credentials: true, // if using cookies or auth
+  origin: "*", // allow all origins
 }));
 // API Routes → all routes inside /routes/index.ts
 app.use("/api", routes);
