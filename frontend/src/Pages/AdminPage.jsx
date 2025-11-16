@@ -8,12 +8,7 @@ export default function AdminPage() {
   const [loading, setLoading] = useState(true);
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
 
-const [form, setForm] = useState({
-  name: "",
-  price: "",
-  category: "",
-  quantity: ""
-});
+
 
 
 
@@ -26,29 +21,43 @@ const [form, setForm] = useState({
   };
 
   // Fetch sweets
-  const loadSweets = async () => {
-    try {
-      const res = await axios.get(API);
-      setSweets(res.data.sweets || res.data);
-    } catch (err) {
-      console.error("Failed to load sweets", err);
-    }
-    setLoading(false);
-  };
+ const loadSweets = async () => {
+  try {
+    const res = await axios.get(`${API}/getAllsweets`);
+    setSweets(res.data.sweets || res.data);
+  } catch (err) {
+    console.error("Failed to load sweets", err);
+  }
+  setLoading(false);
+};
+
 
   useEffect(() => {
     loadSweets();
   }, []);
 
+// Add these fields to your form state
+const [form, setForm] = useState({
+  name: "",
+  price: "",
+  category: "",
+  quantity: "",
+  image: "",       // optional
+  description: ""  // optional
+});
+
+// Updated handleAddSweet
 const handleAddSweet = async () => {
   try {
     await axios.post(
-      "http://localhost:5000/api/sweets",
+      API,
       {
         name: form.name,
         price: Number(form.price),
-        category: form.category,   // ADD THIS FIELD
-        quantity: Number(form.quantity)  // FIX THIS FIELD
+        category: form.category,
+        quantity: Number(form.quantity),
+        image: form.image || "",          // optional
+        description: form.description || "" // optional
       },
       {
         headers: {
@@ -59,11 +68,14 @@ const handleAddSweet = async () => {
 
     loadSweets();
     alert("Sweet Added!");
+    // Reset form if needed
+    setForm({ name: "", price: "", category: "", quantity: "", image: "", description: "" });
   } catch (err) {
     alert("Add failed");
     console.log(err);
   }
 };
+
 
 
 
@@ -143,12 +155,14 @@ const handleAddSweet = async () => {
         <div className="bg-white p-5 rounded shadow mb-10">
           <h2 className="text-xl font-semibold mb-4">Add New Sweet</h2>
           <div className="grid grid-cols-2 gap-3">
-           <input placeholder="Name" onChange={(e)=>setForm({...form, name: e.target.value})} />
-<input placeholder="Price" onChange={(e)=>setForm({...form, price: e.target.value})} />
-<input placeholder="Category" onChange={(e)=>setForm({...form, category: e.target.value})} />
-<input placeholder="Quantity" onChange={(e)=>setForm({...form, quantity: e.target.value})} />
+  <input placeholder="Name" value={form.name} onChange={e=>setForm({...form, name:e.target.value})} />
+  <input placeholder="Price" value={form.price} onChange={e=>setForm({...form, price:e.target.value})} />
+  <input placeholder="Category" value={form.category} onChange={e=>setForm({...form, category:e.target.value})} />
+  <input placeholder="Quantity" value={form.quantity} onChange={e=>setForm({...form, quantity:e.target.value})} />
+  <input placeholder="Image URL (optional)" value={form.image} onChange={e=>setForm({...form, image:e.target.value})} />
+  <input placeholder="Description (optional)" value={form.description} onChange={e=>setForm({...form, description:e.target.value})} />
+</div>
 
-          </div>
           <button onClick={handleAddSweet} className="mt-4 bg-red-600 text-white px-4 py-2 rounded">
             Add Sweet
           </button>

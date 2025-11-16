@@ -22,7 +22,7 @@ router.post("/:id/restock", isAuthenticatedAdmin, restockSweet);
 
 
 
-router.get("/", getAllSweets); // public
+router.get("/getAllsweets", getAllSweets); // public
 router.get("/search", searchSweets); // public
 
 router.post("/:id/purchase", isAuthenticatedUser, purchaseSweet);

@@ -17,6 +17,8 @@ export const AuthProvider = ({ children }) => {
 
     setUser(data.user);
     setToken(data.token);
+      localStorage.setItem("userToken", data.token);
+  localStorage.setItem("userInfo", JSON.stringify(data.user));
   };
 
   // ---------------- USER LOGIN ----------------
@@ -28,6 +30,8 @@ export const AuthProvider = ({ children }) => {
 
     setUser(data.user);
     setToken(data.token);
+      localStorage.setItem("userToken", data.token);
+  localStorage.setItem("userInfo", JSON.stringify(data.user));
   };
 
   // ---------------- ADMIN LOGIN ----------------

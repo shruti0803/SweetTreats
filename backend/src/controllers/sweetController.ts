@@ -4,14 +4,25 @@ import Sweet from "../models/Sweet";
 // ADD SWEET (Admin)
 export const addSweet = async (req: Request, res: Response) => {
   try {
-    const { name, price, category, quantity } = req.body;
+    const { name, price, category, quantity, image, description } = req.body;
 
-    const sweet = await Sweet.create({ name, price, category, quantity });
+    // Create the sweet; image and description are optional
+    const sweet = await Sweet.create({ 
+      name, 
+      price, 
+      category, 
+      quantity, 
+      image: image || "",         // default empty string if not provided
+      description: description || "" 
+    });
+
     res.status(201).json({ message: "Sweet added", sweet });
-  } catch {
+  } catch (err) {
+    console.error(err);
     res.status(500).json({ message: "Error adding sweet" });
   }
 };
+
 
 // UPDATE SWEET (Admin)
 export const updateSweet = async (req: Request, res: Response) => {
