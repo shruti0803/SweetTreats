@@ -11,7 +11,7 @@ export const AuthProvider = ({ children }) => {
   // ---------------- USER REGISTER ----------------
   const registerUser = async ({ name, email, password }) => {
     const { data } = await axios.post(
-      "http://localhost:5000/api/user/register",
+      "https://sweettreats-3.onrender.com/api/user/register",
       { name, email, password }
     );
 
@@ -24,7 +24,7 @@ export const AuthProvider = ({ children }) => {
   // ---------------- USER LOGIN ----------------
   const loginUser = async ({ email, password }) => {
     const { data } = await axios.post(
-      "http://localhost:5000/api/user/login",
+      "https://sweettreats-3.onrender.com/api/user/login",
       { email, password }
     );
 
@@ -37,7 +37,7 @@ export const AuthProvider = ({ children }) => {
   // ---------------- ADMIN LOGIN ----------------
   const loginAdmin = async ({ email, password }) => {
   const { data } = await axios.post(
-    "http://localhost:5000/api/admin/login",
+    "https://sweettreats-3.onrender.com/api/admin/login",
     { email, password }
   );
 
@@ -53,7 +53,7 @@ export const AuthProvider = ({ children }) => {
   // ---------------- LOGOUT ----------------
 // AuthContext.js (add logout)
 const logout = async () => {
-  await axios.post("http://localhost:5000/api/user/logout", {}, { withCredentials: true });
+  await axios.post("https://sweettreats-3.onrender.com/api/user/logout", {}, { withCredentials: true });
   setUser(null);
   setAdmin(null);
   setToken(null);

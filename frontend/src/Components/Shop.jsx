@@ -22,7 +22,7 @@ const ProductCard = ({ product }) => {
     try {
       setLoading(true);
       const res = await axios.post(
-        `http://localhost:5000/api/sweets/${product._id}/purchase`,
+        `https://sweettreats-3.onrender.com/api/sweets/${product._id}/purchase`,
         { quantity },
         { headers: { Authorization: `Bearer ${token}` } }
       );
@@ -90,7 +90,7 @@ const Shop = () => {
 
   const fetchProducts = async () => {
     try {
-      const res = await axios.get("http://localhost:5000/api/sweets/getAllsweets");
+      const res = await axios.get("https://sweettreats-3.onrender.com/api/sweets/getAllsweets");
       setProducts(res.data);
     } catch (err) {
       console.error("Failed to load products:", err);
@@ -105,7 +105,7 @@ const Shop = () => {
       if (minPrice) params.minPrice = minPrice;
       if (maxPrice) params.maxPrice = maxPrice;
 
-      const res = await axios.get("http://localhost:5000/api/sweets/search", { params });
+      const res = await axios.get("https://sweettreats-3.onrender.com/api/sweets/search", { params });
       setProducts(res.data);
     } catch (err) {
       console.error("Search failed:", err);

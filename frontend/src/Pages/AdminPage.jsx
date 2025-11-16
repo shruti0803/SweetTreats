@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { PencilIcon, PlusCircleIcon, TrashIcon } from "@heroicons/react/24/outline";
 import axios from "axios";
 
-const API = "http://localhost:5000/api/sweets";
+const API = "https://sweettreats-3.onrender.com/api/sweets";
 
 export default function AdminPage() {
   const [sweets, setSweets] = useState([]);
