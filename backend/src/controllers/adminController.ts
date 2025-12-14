@@ -49,7 +49,13 @@ export const registerAdmin = async (req: Request, res: Response) => {
 // ------------------ LOGIN ADMIN ------------------
 export const loginAdmin = async (req: Request, res: Response) => {
   try {
-    const { email, password } = req.body;
+    let { email, password } = req.body;
+
+    if (!email || !password) {
+      return res.status(400).json({ message: "Email and password required" });
+    }
+
+    password = String(password); // 🔥 force string
 
     const admin = await Admin.findOne({ email });
     if (!admin) {
@@ -78,6 +84,8 @@ export const loginAdmin = async (req: Request, res: Response) => {
       }
     });
   } catch (error) {
+    console.error(error);
     return res.status(500).json({ message: "Error logging in admin" });
   }
 };
+
