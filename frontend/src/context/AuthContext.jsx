@@ -52,16 +52,18 @@ export const AuthProvider = ({ children }) => {
 
   // ---------------- LOGOUT ----------------
 // AuthContext.js (add logout)
-const logout = async () => {
-  await axios.post("https://sweettreats-3.onrender.com/api/user/logout", {}, { withCredentials: true });
+// ---------------- LOGOUT ----------------
+const logout = () => {
   setUser(null);
   setAdmin(null);
   setToken(null);
+
   localStorage.removeItem("userToken");
   localStorage.removeItem("userInfo");
   localStorage.removeItem("adminToken");
   localStorage.removeItem("adminInfo");
 };
+
 
 
 
