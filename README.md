@@ -152,7 +152,7 @@ All backend endpoints were manually tested and returned expected responses.
 ## 🚀 Live Deployment (Optional)
 
 Try the live version 
-Frontend : https://cheerful-arithmetic-9ef9e3.netlify.app/
+Frontend : https://sweettreatsfrontend.netlify.app/
 Backend : https://sweettreats-3.onrender.com
 
 ---
